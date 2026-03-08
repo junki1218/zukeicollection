@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ずけいこれくとげーむ</title>
+    <!-- Google Fonts: 可愛い丸文字フォント -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="bgContainer"></div>
+
+    <!-- ゲーム画面 (背面に常駐) -->
+    <div id="gameContainer" class="blur">
+        <div id="headerArea">
+            <div id="title">
+                <span id="playerIndicator"></span>
+                <span id="stageIndicator"></span>
+                <span id="headerText"></span>
+            </div>
+            <div id="progressArea"></div>
+        </div>
+        <div id="mainArea"></div>
+    </div>
+
+    <!-- =======================
+     UI Screens (Overlays)
+======================== -->
+
+    <!-- スタート画面 -->
+    <div id="startScreen" class="overlay">
+        <div class="bigMessage">ずけい<br>これくとげーむ</div>
+        <div class="finalMessage" style="font-size: 16px;">おなじ かたちを たっちして あつめよう！<br>いろは なにいろでも だいじょうぶだよ。</div>
+        <button class="btn" onclick="goToSettings()">すたーと！</button>
+    </div>
+
+    <!-- 設定画面 -->
+    <div id="settingsScreen" class="overlay hidden">
+        <div class="settings-panel">
+            <h2 class="settings-title">せってい</h2>
+
+            <div class="setting-group">
+                <label>あそぶ人数：</label>
+                <select id="playerCountSelect" onchange="updatePlayerInputs()">
+                    <option value="1">1人</option>
+                    <option value="2">2人</option>
+                    <option value="3">3人</option>
+                    <option value="4">4人</option>
+                    <option value="5">5人</option>
+                    <option value="6">6人</option>
+                </select>
+            </div>
+
+            <div id="playerSettingsContainer">
+                <!-- JavaScriptで動的生成 -->
+            </div>
+
+            <div class="setting-group ojama-group">
+                <label class="ojama-label">💥お邪魔図形（さわるとNG!）</label>
+                <div class="player-input-row" style="justify-content:center;">
+                    <label class="icon-upload-lbl">
+                        <input type="file" accept="image/*" id="ojamaImageInput"
+                            onchange="previewImage(this, 'ojamaPreview')">
+                        <div class="icon-preview ojama-preview" id="ojamaPreview" tabindex="0">画像を選択</div>
+                    </label>
+                </div>
+                <p class="hint-text">※選ばない場合はデフォルトのドクロマークになります</p>
+            </div>
+
+            <button class="btn btn-pink" style="margin-top:20px; padding: 10px 40px;"
+                onclick="startGameFromSettings()">ゲーム開始！</button>
+        </div>
+    </div>
+
+    <!-- プレイヤーターン開始画面 -->
+    <div id="turnScreen" class="overlay hidden transition-overlay">
+        <div class="turn-content">
+            <div id="turnPlayerIcon" class="big-player-icon"></div>
+            <div id="turnPlayerName" class="bigMessage" style="margin-bottom:10px;"></div>
+            <div class="finalMessage" style="color:#FF1493; font-size:24px;">の ばん！</div>
+        </div>
+    </div>
+
+    <!-- ステージクリア画面 -->
+    <div id="stageClearScreen" class="overlay hidden">
+        <div class="bigMessage" style="color:#FF69B4; text-shadow: 4px 4px 0 #fff, 0 0 20px rgba(255,105,180,0.5);">すてーじ
+            くりあ！</div>
+        <div class="finalMessage" id="nextStageMsg"></div>
+        <button class="btn btn-orange" onclick="nextPlayerOrStage()">つぎへ</button>
+    </div>
+
+    <!-- ゲームオーバー画面 (各プレイヤー) -->
+    <div id="gameOverScreen" class="overlay hidden transition-overlay" style="background: rgba(0,0,0,0.8);">
+        <div class="bigMessage" style="color:#FF3B30; text-shadow: 4px 4px 0 #333, 0 0 20px rgba(255,59,48,0.8);">
+            ゲームオーバー！</div>
+        <div class="finalMessage" id="loserNameMsg" style="color:#fff; font-size: 24px;"></div>
+        <div class="finalMessage" style="color:#ccc; font-size: 16px;">お邪魔図形にふれてしまった…</div>
+        <button class="btn btn-pink" onclick="nextPlayerOrStage()">つぎのひとへ</button>
+    </div>
+
+    <!-- 完全クリア画面 (ゲーム終了) -->
+    <div id="allClearScreen" class="overlay hidden">
+        <div class="bigMessage" style="font-size:32px; margin-bottom:10px; color:#FF8C00;">ぜんぶ の すてーじ おわり！</div>
+        <div class="finalMessage" id="survivalResultMsg"
+            style="font-size: 24px; color:#FF1493; text-shadow:2px 2px 0 #fff; margin: 30px 0;">
+            <!-- 結果表示 -->
+        </div>
+        <button class="btn btn-pink" onclick="returnToTitle()">さいしょから</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
